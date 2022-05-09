@@ -1,6 +1,6 @@
 /** Class implemented by Cooper D. Cohen. */
 
-final class MovieBase {
+final class MovieBaseCDC {
 
   private var mdb: Array[Movie] = _ //unknown size of lines
 
