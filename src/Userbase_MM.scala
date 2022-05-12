@@ -62,9 +62,27 @@ class Userbase_MM {
       if (ratings_iter.hasNext) ratings_iter.apply()._2 else -1
     }
 
+
+    /* Return all of the ratings submitted by the user as a list.
+     * Useful for looping through a user's ratings to calculate their
+     * genre ratings.
+     */
+    def get_users_ratings(): List[(Int, Int)] = {
+      var result = List()
+      val ratings_rover = _ratings_MM.begin
+      while (ratings_rover.hasNext) {
+        val rating = ratings_rover.apply()
+        result ::= rating
+        ratings_rover.next()
+      }
+      result
+    }
+
+
     /* Returns the number of ratings submitted by the user
      */
     def ratings_count(): Int = _ratings_MM.size
+
 
     /* Prints a user's demographic info as found in the u.user file.
      * Only meaningful if get_demographics() is called first.
@@ -125,6 +143,7 @@ class Userbase_MM {
     }
   }
 
+
   /* Parse the u.data file to setup the users array and ratings hash table for each user.
    * Also sets up the movie_ratings array to make it easy to calculate a movie's average rating.
    * Finally, parse the u.user file to get demographics information about each user.
@@ -152,6 +171,18 @@ class Userbase_MM {
     get_demographics() // parses u.user
   }
 
+
+
+  /* Clone the user's array. Used for iterating over all users since the _users
+   * array is private; prevents the user from altering _users
+   */
+  def get_all_users(): Array[User] = _users_MM.clone().drop(1) // users[0] is unused
+
+
+  /* Clone the ratings array. Used for iterating over all ratings since the _movie_ratings
+   * array is private; prevents the user from altering _movie_ratings
+   */
+  def get_all_ratings(): Array[Array[Int]] = _movie_ratings_MM.clone().drop(1) // index 0 is unused
 
 
   /* Fetch the User with the given ID from the users hash table.
@@ -218,7 +249,6 @@ class Userbase_MM {
  * (3) time to compute average rating for all movies
  * (4) time to call rating_query(user, movie) for every user and every movie
  */
-
 /*object TimingTest extends App {
   println("Timing test results:")
   val ms = 1000000.0
