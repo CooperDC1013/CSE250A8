@@ -197,13 +197,13 @@ class Userbase_MM {
   /* Clone the user's array. Used for iterating over all users since the _users
    * array is private; prevents the user from altering _users
    */
-  def get_all_users(): Array[User] = _users_MM.clone().drop(1) // users[0] is unused
+  def get_all_users(): Array[User] = _users_MM.clone().drop(1) // users[0] is unused; can retrieve ID from User class
 
 
   /* Clone the ratings array. Used for iterating over all ratings since the _movie_ratings
    * array is private; prevents the user from altering _movie_ratings
    */
-  def get_all_ratings(): Array[Array[Int]] = _movie_ratings_MM.clone().drop(1) // index 0 is unused
+  def get_all_ratings(): Array[Array[Int]] = _movie_ratings_MM.clone() // index 0 is unused, but keep so index = movieID
 
 
   /* Fetch the User with the given ID from the users hash table.
@@ -270,7 +270,6 @@ class Userbase_MM {
  * (3) time to compute average rating for all movies
  * (4) time to call rating_query(user, movie) for every user and every movie
  */
-
 /*object TimingTest extends App {
   println("Timing test results:")
   val ms = 1000000.0
