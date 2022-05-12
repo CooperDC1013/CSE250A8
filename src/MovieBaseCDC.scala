@@ -2,15 +2,20 @@
 
 final class MovieBaseCDC {
 
-  private var mdb: Array[Movie] = _ //unknown size of lines
-  createDatabase("u.item.txt")
+  private var mdb: Array[Movie] = Array.tabulate(1683)(_ => dummyMovie()) //unknown size of lines
+  createDatabase("./src/u.item.txt")
+
+  private def dummyMovie(): Movie = new Movie(0, "", 0, Array(true, true, true, true, true, true))
 
   def createDatabase(inpFile: String): Unit = {
     val raw = io.Source.fromFile(inpFile)
     val lines = raw.getLines().map(line => line.split('|'))
-    mdb = new Array[Movie](lines.length+1) //create size of array same as number of movie entries. Movie index == mdb index.
-    for (line <- lines) {
-        mdb(line(0).toInt) = new Movie(line(0).toInt, line(1), line(2).substring(line(2).length-5).toInt, getGenre(line))
+    //mdb = new Array[Movie](lines.length+1) //create size of array same as number of movie entries. Movie index == mdb index.
+    for (line <- lines if line(1).compareTo("unknown") != 0 && line(1)(line(1).length - 2) != 'V') {
+      //println(line.mkString("Array(", ", ", ")"))
+      //mdb(line(0).toInt) = new Movie(line(0).toInt, line(1), line(2).substring(line(2).length-5).toInt, getGenre(line))
+      mdb(line(0).toInt) = new Movie(line(0).toInt, line(1), line(1).trim.drop(line(1).length-6).drop(1).dropRight(1).toInt, getGenre(line))
+
     }
   } /**reads and parses file. Must be called after instance creation. */
 
@@ -32,6 +37,7 @@ final class MovieBaseCDC {
    Method used to retrive genre of either a particular movie, or given a list of indices returns buckets for each genre.
   */
   private def getGenre(lst: Array[String]): Array[Boolean] = {
+
     val action: Boolean = (lst(6) + lst(7) + lst(21) + lst(23)).toInt > 0
     val noir: Boolean = (lst(11) + lst(15) + lst(16) + lst(18)).toInt > 0
     val light: Boolean = (lst(8) + lst(9) + lst(10) + lst(17)).toInt > 0
@@ -42,7 +48,7 @@ final class MovieBaseCDC {
     Array(action, noir, light, serious, fantasy, history)
   } /** converts genre string from file into array */
 
-  private class Movie(val ind: Int, val  title: String, val year: Int, val genre: Array[Boolean]) {
+  class Movie(val ind: Int, val  title: String, val year: Int, val genre: Array[Boolean]) {
 
     private var accRatings: Int = 0
     private var totRatings: Int = 0

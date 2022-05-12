@@ -6,17 +6,15 @@ object NetflixMain extends App {
     1
   }
 
-  class Recommendations extends Heap[(String, Double)](1682, (x, y) => keyComp(x._2, y._2))
+  class Recommendations extends Heap[(String, Double)](1682, (x, y) => keyComp(y._2, x._2))
 
   val mdb = new MovieBaseCDC
   val udb = new Userbase_MM
 
-  val mRatings: Array[Array[Int]] = udb.get_all_ratings()
+  //val mRatings: Array[Array[Int]] = udb.get_all_ratings()
   val users = udb.get_all_users()
 
-
-
-  for (movie <- mRatings) {mdb.addRating(movie(0), movie(1))} //Add movie ratings to mdb to get later when discerning genres.
+  //for (movie <- mRatings) {mdb.addRating(movie(0), movie(1))} //Add movie ratings to mdb to get later when discerning genres.
 
   var action: Int = 0
   var noir: Int = 1
@@ -25,16 +23,18 @@ object NetflixMain extends App {
   var fantasy: Int = 4
   var history: Int = 5
 
-  for (user <- users.indices) {
+  for (user <- users.indices if user != 0) {
+
+    val rankings = new Recommendations()
 
     val id: Int = users(user).userID
     val ratings: List[(Int, Int)] = users(id).get_users_ratings()
 
 
-    val genreAcc: Array[Int] = Array.fill(6){0}
-    val genreCount: Array[Int] = Array.fill(6){0}
-    val movieAcc: Array[Int] = Array.fill(6){0}
-    val movieCount: Array[Int] = Array.fill(6){0}
+    val genreAcc: Array[Double] = Array.fill(6){0}
+    val genreCount: Array[Double] = Array.fill(6){0}
+    val movieAcc: Array[Double] = Array.fill(6){0}
+    val movieCount: Array[Double] = Array.fill(6){0}
 
 
 
@@ -66,6 +66,9 @@ object NetflixMain extends App {
         score = math.max(score, udb.compute_average_rating(i) * p_ug(j))
       }
 
+      rankings.enqueue((allMovies(i).title, score))
     }
+    for (x <- 0 to 1) println(rankings.pop())
+
   }
 }
