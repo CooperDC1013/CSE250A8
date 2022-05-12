@@ -39,6 +39,9 @@ class Userbase_MM {
     (x, y) => x._1 == y._1)
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Start of internal User clas
+
   /* Store's a user's ID and the ratings they've submitted as described above.
    * Also stores demographics information about the user.
    */
@@ -120,6 +123,13 @@ class Userbase_MM {
 
     }
   }
+  // End of internal User class
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Start of private methods
 
   /* Makes a dummy user. Used for returning a dummy with an ID of -1 from the get_user() method upon a failed lookup
    * in order to satisfy the method's return type.
@@ -176,8 +186,13 @@ class Userbase_MM {
 
     get_demographics() // parses u.user
   }
+  // End of private methods
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Start of client methods
 
   /* Clone the user's array. Used for iterating over all users since the _users
    * array is private; prevents the user from altering _users
