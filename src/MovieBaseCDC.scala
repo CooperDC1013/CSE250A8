@@ -16,6 +16,8 @@ final class MovieBaseCDC {
 
   def getMovies: Array[Movie] = mdb.clone()
 
+  def getTitle(mind: Int) = mdb(mind).title
+
   def addRating(mind: Int, r: Int, a: Int = 1): Unit = {
     if (r > 0 && r < 6) mdb(mind).addRating(r, a)
   } /** add 1 rating to a particular movie, given index. */
@@ -40,7 +42,7 @@ final class MovieBaseCDC {
     Array(action, noir, light, serious, fantasy, history)
   } /** converts genre string from file into array */
 
-  private class Movie(ind: Int, title: String, year: Int, genre: Array[Boolean]) {
+  private class Movie(val ind: Int, val  title: String, val year: Int, val genre: Array[Boolean]) {
 
     private var accRatings: Int = 0
     private var totRatings: Int = 0

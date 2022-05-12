@@ -14,6 +14,8 @@ object NetflixMain extends App {
   val mRatings: Array[Array[Int]] = udb.get_all_ratings()
   val users = udb.get_all_users()
 
+
+
   for (movie <- mRatings) {mdb.addRating(movie(0), movie(1))} //Add movie ratings to mdb to get later when discerning genres.
 
   var action: Int = 0
@@ -64,7 +66,6 @@ object NetflixMain extends App {
         score = math.max(score, udb.compute_average_rating(i) * p_ug(j))
       }
 
-      val rankings:
     }
   }
 }
