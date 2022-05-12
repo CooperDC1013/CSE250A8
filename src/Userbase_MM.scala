@@ -197,7 +197,7 @@ class Userbase_MM {
   /* Clone the user's array. Used for iterating over all users since the _users
    * array is private; prevents the user from altering _users
    */
-  def get_all_users(): Array[User] = _users_MM.clone() // users[0] is unused; can retrieve ID from User class
+  def get_all_users(): Array[User] = _users_MM.clone().drop(1) // users[0] is unused; can retrieve ID from User class
 
 
   /* Clone the ratings array. Used for iterating over all ratings since the _movie_ratings
@@ -327,6 +327,8 @@ class Userbase_MM {
   println()
 
   println(s"TOTAL TIME ELAPSED: $totalTime ms")
+
+ */
 }
-*/
+
 
