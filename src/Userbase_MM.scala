@@ -10,6 +10,10 @@
 import io.Source
 
 class Userbase_MM {
+  private val MINIMUM_USER_ID = 1
+  private val MAXIMUM_USER_ID = 943
+  private val MINIMUM_MOVIE_ID = 1
+  private val MAXIMUM_MOVIE_ID = 1682
 
   /* Primary fields for the Userbase.
 
@@ -21,9 +25,10 @@ class Userbase_MM {
    * The inner Array[Int] store 2 integers: (total rating, number of ratings) where the total rating is the sum of all
    * ratings users have submitted for the given movie; this is useful for calculating a movie's avg rating efficiently.
    */
-  private val _users_MM: Array[User] = Array.tabulate(944)(n => new User(n))
-  private val _movie_ratings_MM: Array[Array[Int]] = Array.ofDim[Int](1683, 2)
+  private val _users_MM: Array[User] = Array.tabulate(MAXIMUM_USER_ID+1)(n => new User(n))
+  private val _movie_ratings_MM: Array[Array[Int]] = Array.ofDim[Int](MAXIMUM_MOVIE_ID+1, 2)
   userbase_init() // Parses u.data amd u.user to extract the relevant data
+
 
 
   /* Hash[Tuple[Int]] where Tuple=(movieID, user rating). Used for the ratings field in the User class.
@@ -40,6 +45,7 @@ class Userbase_MM {
   class User(val userID: Int) {
     private val _ratings_MM = new User_RatingsHash_MM()
     private val _demographics = Array("", "", "") // age, gender, occupation
+
 
     /* Inserts a rating into the user's ratings hash table.
      * To avoid double insertions for the same movie, a check for the rating is first performed.
@@ -232,13 +238,13 @@ class Userbase_MM {
   /* Checks whether a given userID is valid.
    * Returns true if it's valid and false otherwise
    */
-  def valid_user_id(id: Int): Boolean = id > 0 && id < 944
+  def valid_user_id(id: Int): Boolean = id >= MINIMUM_USER_ID && id <= MAXIMUM_USER_ID
 
 
   /* Checks whether a given movieID is valid.
    * Returns true if it's valid and false otherwise
    */
-  def valid_movie_id(id: Int): Boolean = id > 0 && id < 1683
+  def valid_movie_id(id: Int): Boolean = id >= MINIMUM_MOVIE_ID && id <= MAXIMUM_MOVIE_ID
 
 }
 
@@ -249,8 +255,8 @@ class Userbase_MM {
  * (3) time to compute average rating for all movies
  * (4) time to call rating_query(user, movie) for every user and every movie
  */
-/*
-object TimingTest extends App {
+
+/*object TimingTest extends App {
   println("Timing test results:")
   val ms = 1000000.0
   var elapsedTime = 0.0
@@ -309,5 +315,5 @@ object TimingTest extends App {
 
   println(s"TOTAL TIME ELAPSED: $totalTime ms")
 }
-*/
+/*
 
