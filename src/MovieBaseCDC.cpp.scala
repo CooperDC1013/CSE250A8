@@ -3,6 +3,7 @@
 final class MovieBaseCDC {
 
   private var mdb: Array[Movie] = _ //unknown size of lines
+  createDatabase("u.item.txt")
 
   def createDatabase(inpFile: String): Unit = {
     val raw = io.Source.fromFile(inpFile)
@@ -13,8 +14,8 @@ final class MovieBaseCDC {
     }
   } /**reads and parses file. Must be called after instance creation. */
 
-  def addRating(mind: Int, r: Int): Unit = {
-    if (r > 0 && r < 6) mdb(mind).addRating(r)
+  def addRating(mind: Int, r: Int, a: Int = 1): Unit = {
+    if (r > 0 && r < 6) mdb(mind).addRating(r, a)
   } /** add 1 rating to a particular movie, given index. */
 
   def rating(mind: Int): Double = {
@@ -40,9 +41,9 @@ final class MovieBaseCDC {
     private var accRatings: Int = 0
     private var totRatings: Int = 0
 
-    def addRating(r: Int):Unit = {
+    def addRating(r: Int, a: Int = 1):Unit = {
       if (r > 0 && r < 6) {
-        totRatings += 1
+        totRatings += a
         accRatings += r
       }
     }

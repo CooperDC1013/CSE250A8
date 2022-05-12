@@ -255,7 +255,6 @@ class Userbase_MM {
    */
   def valid_user_id(id: Int): Boolean = id >= MINIMUM_USER_ID && id <= MAXIMUM_USER_ID
 
-
   /* Checks whether a given movieID is valid.
    * Returns true if it's valid and false otherwise
    */
