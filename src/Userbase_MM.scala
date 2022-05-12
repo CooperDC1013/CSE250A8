@@ -124,7 +124,7 @@ class Userbase_MM {
    * The users array must be initialized first due to the call to get_user() and initialize_demographics()
    */
   private def get_demographics(): Unit = {
-    val userdata_file = "./u.user"
+    val userdata_file = "./src/u.user.txt"
     val source = Source.fromFile(userdata_file)
     val userinfo_list = source.getLines().map(line => line.split("\\|")).toList
     source.close()
@@ -150,7 +150,7 @@ class Userbase_MM {
    * Called whenever an instance of the class is made.
    */
   private def userbase_init(): Unit = {
-    val userdata_file = "./u.data"
+    val userdata_file = "./src/u.data.txt"
     val source = Source.fromFile(userdata_file)
     val userdata_list = source.getLines().map(line => line.split("\\t")).toList
     source.close()
@@ -249,7 +249,8 @@ class Userbase_MM {
  * (3) time to compute average rating for all movies
  * (4) time to call rating_query(user, movie) for every user and every movie
  */
-/*object TimingTest extends App {
+/*
+object TimingTest extends App {
   println("Timing test results:")
   val ms = 1000000.0
   var elapsedTime = 0.0
