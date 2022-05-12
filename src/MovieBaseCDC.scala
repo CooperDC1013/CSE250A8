@@ -14,6 +14,8 @@ final class MovieBaseCDC {
     }
   } /**reads and parses file. Must be called after instance creation. */
 
+  def getMovies: Array[Movie] = mdb.clone()
+
   def addRating(mind: Int, r: Int, a: Int = 1): Unit = {
     if (r > 0 && r < 6) mdb(mind).addRating(r, a)
   } /** add 1 rating to a particular movie, given index. */
@@ -22,7 +24,9 @@ final class MovieBaseCDC {
     mdb(mind).rating
   } /**retrieves average rating of particular movie, given index. */
 
-  def genre: Int = ??? /**need to collaborate to decide if genre should be returned as sequence or individually for each m.
+  def genre(mind: Int): Array[Boolean] = {
+    mdb(mind).getGenre
+  } /**need to collaborate to decide if genre should be returned as sequence or individually for each m.
    Method used to retrive genre of either a particular movie, or given a list of indices returns buckets for each genre.
   */
   private def getGenre(lst: Array[String]): Array[Boolean] = {
@@ -63,5 +67,7 @@ final class MovieBaseCDC {
         case "history" => genre(5)
       }
     }
+
+    def getGenre: Array[Boolean] = genre
   } /** internal Movie class for each movie entry. */
 }
