@@ -68,7 +68,7 @@ class Userbase_MM {
      * genre ratings.
      */
     def get_users_ratings(): List[(Int, Int)] = {
-      var result = List()
+      var result: List[(Int, Int)] = List()
       val ratings_rover = _ratings_MM.begin
       while (ratings_rover.hasNext) {
         val rating = ratings_rover.apply()
