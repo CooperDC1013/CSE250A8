@@ -1,5 +1,13 @@
 object NetflixMain extends App {
 
+  def keyComp(score1: Double, score2: Double): Int = {
+    if (score1 > score2) return -1
+    else if (score1 == score2) return 0
+    1
+  }
+
+  class Recommendations extends Heap[(String, Double)](1682, (x, y) => keyComp(x._2, y._2))
+
   val mdb = new MovieBaseCDC
   val udb = new Userbase_MM
 
