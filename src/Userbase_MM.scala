@@ -184,7 +184,7 @@ class Userbase_MM {
       _users_MM(user_id).insert_rating(movie_id, rating)
     }
 
-    get_demographics() // parses u.user
+    //get_demographics() // parses u.user
   }
   // End of private methods
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
