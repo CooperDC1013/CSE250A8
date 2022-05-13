@@ -7,7 +7,6 @@ object NetflixMain2 {
     val moviebase = new MovieBaseCDC
     val userbase = new Userbase_MM
 
-
     // Client input
     print("Enter a user ID: ")
     val id_input = scala.io.StdIn.readLine()
@@ -50,7 +49,6 @@ object NetflixMain2 {
     }
     val u_gAverage: Array[Double] = (for (g <- movieAcc.indices) yield {movieAcc(g) / movieCount(g)}).toArray
 
-
     // (Int, Int) = (movieID, rating)
     val ratings: List[(Int, Int)] = allUsers(userID).get_users_ratings()
 
@@ -67,9 +65,9 @@ object NetflixMain2 {
         }
       }
     }
+    val u_g: Array[Double] = (for (g <- genreAcc.indices) yield {genreAcc(g).toDouble / genreCount(g)}).toArray
 
     // Stores the p_ug of all 6 genres for the current user
-    val u_g: Array[Double] = (for (g <- genreAcc.indices) yield {genreAcc(g).toDouble / genreCount(g)}).toArray
     val p_ug: Array[Double] = (for (g <- u_g.indices) yield {u_g(g) / u_gAverage(g)}).toArray
 
     // Loop over all movies and generate a recommendation score for the user for each movie
