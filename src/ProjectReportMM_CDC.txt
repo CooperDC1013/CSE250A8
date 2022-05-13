@@ -1,0 +1,88 @@
+Project Report :
+
+Cooper Cohen
+Michael McDonald
+
+A)  Four Choices :
+
+        In both the MovieBase and UserBase classes, we realized that we only needed random access and the occasional
+    cloning method to handle the structures containing both user data or movie data. Because we didn't require .find
+    or .insert or .delete, we decided that arrays could be used to represent the databases, as a lookup by index was
+    O(1) time. Because we identified very specific use of our data sets, it was clear that an array was the proper
+    choice, because any iterable data structure would move random access O(1) -> O(n), which is bad news.
+
+        Because we required only random access lookups, combined with the fact that we had integer indices for each
+    user and movie, we made the convenient decision to align the indices of the Array data structure holding either
+    users and movies with the indices of the movies and users themselves. This created Arrays with the 0 element empty,
+    which we just ignored, as these data structures were only used for lookups, not iterations. A list would have been
+    detrimental, as we could no longer exploit the integer lookup effect that you can achieve with an array.
+    Additionally, since there was no need for .find or .insert, or the need for these structures to be sorted, a linear
+    data structure was appropriate.
+
+        Another interesting choice we made was how to set the genre for each movie. My first thought was to do a base 2
+    system like the following :
+
+            Action  = 1
+            Noir    = 2
+            Light   = 4
+            Serious = 8
+            Fantasy = 16
+            History = 32
+
+    So if a movie was History, Serious, and Action, it would be given a code of (32+8+1)=41. This was thought
+    to be used by recursively subtracting the highest power of two to decipher which genres qualified, but this
+    would incur a lot of extra comparisons to the code as each level was removed, which was unfavorable compared to
+    the actual decision we made. We decided to use an Array[Boolean], where the indices were agreed to indicate the
+    genres as follows :
+
+        Action  = 0
+        Noir    = 1
+        Light   = 2
+        Serious = 3
+        Fantasy = 4
+        History = 5
+
+    This allowed us to simply iterate over the array, adding a simple condition that the index is True. When the guard
+    statement passes, the iteration adds the movie to the corresponding genre bucket, which went in to an Array[Double]
+    representing either the rating accumulator for the genre or the rating count for the genre. The indices of these
+    resulting arrays are aligned with the key described above, so we could still use the index in the for loop to access
+    the proper genre for retrieval and storage.
+
+        An additional decision we made was to have both private, internal classes to denote a Movie and a User that
+    lived inside of the MovieBase and UserBase. This added an extra layer of security to only provide retrieval
+    functionality to the external database classes only, protecting the concrete data stored in the initial files given.
+
+        Our final choice was the decision to use a Max Heap to store the indices and (p_ug * r_m) score of each movie
+    for each user. This allowed us a sorted structure in which the top recommended movies live at the top of the
+    heap. This allowed o(logn) time for retrieval, as the retrieval of the top recommended movies is almost always
+    less than logn time, since they live near the top of the max heap. Of course, O(logn) time was achieved for
+    each insertion for each user, but it is much better than using a linear structure such as a list or array to
+    maintain a sorted structure, which would have O(n) time for retrieval and storage.
+
+B)  Runtime Analysis :
+
+        Starting from the beginning of the Main Object :
+
+            0. Initialization of the MovieBase and UserBase classes simply iterated over the lines in the data files,
+            This produced a value of O(M), Θ(M), O(U), Θ(U), linear runtimes for the iteration over the entire sets.
+
+            1. Assigning genres required iterating over the entire movie set, yielding O(M), Θ(M).
+            There was nothing that could be done about this.
+
+            2.  The next largest block starts on line 41, starting a for loop iterating over users.
+                a) User iteration => Θ(U).
+                b) Line 45, get_all_ratings => Θ(R_u). This implies Θ(U) * Θ(R_u) = Θ(R).
+                c) Line 51, for loop iterates over R_u. Since this is added to b), no change in runtime of block.
+                d) Line 68 for loop => Θ(M) * O(logM) = O(MlogM) //comes from .enqueue calls to Max Heap
+
+            From this analysis, we are left with the final calculation for the main object :
+
+            Θ(M + U) + Θ(M) + Θ(U) * Θ(R_u) * O(MlogM) =
+            Θ(M + U) + Θ(R) * O(MlogM) =
+            Θ(M + U) + O(RMlogM)
+
+        A similar calculation can be made for the user-selected Main Object, except that the iteration over all users
+        does not occur :
+
+            Θ(M + U) + Θ(M) + O(MlogM) =
+            Θ(M + U) + O(MlogM)
