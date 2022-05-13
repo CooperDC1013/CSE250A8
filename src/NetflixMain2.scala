@@ -31,23 +31,6 @@ object NetflixMain2 {
 
     val allMovies = moviebase.getMovies
     val allUsers = userbase.get_all_users()
-    val allRatings = userbase.get_all_ratings()
-
-    // Accumulates the average rating of all movies for each genre; used to calculate p_ug
-    val movieAcc: Array[Double] = Array.fill(6){0}
-    val movieCount: Array[Int] = Array.fill(6){0}
-    // Loop over all movies and compute the average rating for each genre.
-    for (movieID <- allMovies.indices if movieID != 0) {
-      val genres: Array[Boolean] = moviebase.genre(movieID)
-      val overall_rating = allRatings(movieID)
-      for (g <- genres.indices) {
-        if (genres(g)) {
-          movieAcc(g) += overall_rating(0)
-          movieCount(g) += overall_rating(1)
-        }
-      }
-    }
-    val u_gAverage: Array[Double] = (for (g <- movieAcc.indices) yield {movieAcc(g) / movieCount(g)}).toArray
 
     // (Int, Int) = (movieID, rating)
     val ratings: List[(Int, Int)] = allUsers(userID).get_users_ratings()
@@ -55,17 +38,25 @@ object NetflixMain2 {
     // Accumulates the user's total rating and number of ratings submitted for each genre
     val genreAcc: Array[Int] = Array.fill(6){0}
     val genreCount: Array[Int] = Array.fill(6){0}
-    // Loop over all of a user's ratings to calculate u_g
+    // Accumulates the average rating of all movies for each genre; used to calculate p_ug
+    val movieAcc: Array[Double] = Array.fill(6){0}
+    val movieCount: Array[Int] = Array.fill(6){0}
+
+    // Loop over all of a user's ratings to calculate u_g and u_gAverage
     for (rating <- ratings) {
       val genres: Array[Boolean] = moviebase.genre(rating._1)
       for (g <- genres.indices) {
         if (genres(g)) {
           genreAcc(g) += rating._2
           genreCount(g) += 1
+
+          movieAcc(g) += userbase.compute_average_rating(rating._1)
+          movieCount(g) += 1
         }
       }
     }
     val u_g: Array[Double] = (for (g <- genreAcc.indices) yield {genreAcc(g).toDouble / genreCount(g)}).toArray
+    val u_gAverage: Array[Double] = (for (g <- movieAcc.indices) yield {movieAcc(g) / movieCount(g)}).toArray
 
     // Stores the p_ug of all 6 genres for the current user
     val p_ug: Array[Double] = (for (g <- u_g.indices) yield {u_g(g) / u_gAverage(g)}).toArray
