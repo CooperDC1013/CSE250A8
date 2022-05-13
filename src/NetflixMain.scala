@@ -2,7 +2,7 @@ import java.io.FileWriter
 
 object NetflixMain extends App {
   // Allows an optional command line argument for the number of recommendations provided
-  private val number_of_recommendations: Int = if (args.length == 1) args(0).toInt else 30
+  private val number_of_recommendations: Int = if (args.length == 1) args(0).toInt else 10
 
   // Heap for storing each user's recommendations; a new heap is used for each user
   private class Recommendations extends Heap[(String, Double)](1682, (x, y) => x._2.compareTo(y._2))
@@ -12,6 +12,7 @@ object NetflixMain extends App {
 
   private val allMovies = moviebase.getMovies
   private val allUsers = userbase.get_all_users()
+  private val allRatings = userbase.get_all_ratings()
 
   // Accumulates the average rating of all movies for each genre; used to calculate p_ug for each user
   private val movieAcc: Array[Double] = Array.fill(6){0}
@@ -19,11 +20,11 @@ object NetflixMain extends App {
   // Loop over all movies and compute the average rating for each genre.
   for (movieID <- allMovies.indices if movieID != 0) {
     val genres: Array[Boolean] = moviebase.genre(movieID)
-
+    val overall_rating = allRatings(movieID)
     for (g <- genres.indices) {
       if (genres(g)) {
-        movieAcc(g) += userbase.compute_average_rating(movieID)
-        movieCount(g) += 1
+        movieAcc(g) += overall_rating(0)
+        movieCount(g) += overall_rating(1)
       }
     }
   }
