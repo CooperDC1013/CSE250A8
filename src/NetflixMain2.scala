@@ -4,19 +4,31 @@
  */
 object NetflixMain2 {
   def main(args: Array[String]): Unit = {
+    val moviebase = new MovieBaseCDC
+    val userbase = new Userbase_MM
+
+
+    // Client input
     print("Enter a user ID: ")
-    val id_input = scala.io.StdIn.readLine().toInt
+    val id_input = scala.io.StdIn.readLine()
+    if (!id_input.forall(_.isDigit) || !userbase.valid_user_id(id_input.toInt)) {
+      println("Invalid ID; please try again with a number between 1 and 943.")
+      return
+    }
+    val userID = id_input.toInt
+
     print("Enter a number of recommendations: ")
-    val recommendations_input = scala.io.StdIn.readLine().toInt
+    val recommendations_input = scala.io.StdIn.readLine()
+    if (!recommendations_input.forall(_.isDigit) || !userbase.valid_movie_id(recommendations_input.toInt)) {
+      println("Invalid input; please try again with a number between 1 and 1682")
+      return
+    }
     println()
 
 
-    // Heap for storing each user's recommendations; a new heap is used for each user
+    // Heap for storing each user's recommendations
     class Recommendations extends Heap[(String, Double)](1682, (x, y) => x._2.compareTo(y._2))
     val rankings = new Recommendations()
-
-    val moviebase = new MovieBaseCDC
-    val userbase = new Userbase_MM
 
     val allMovies = moviebase.getMovies
     val allUsers = userbase.get_all_users()
@@ -40,7 +52,7 @@ object NetflixMain2 {
 
 
     // (Int, Int) = (movieID, rating)
-    val ratings: List[(Int, Int)] = allUsers(id_input).get_users_ratings()
+    val ratings: List[(Int, Int)] = allUsers(userID).get_users_ratings()
 
     // Accumulates the user's total rating and number of ratings submitted for each genre
     val genreAcc: Array[Int] = Array.fill(6){0}
@@ -74,8 +86,8 @@ object NetflixMain2 {
     }
     // Pop the top 10, 30, 50, etc. recommendations from the heap
     // Write the recommendations to an output file
-    for (x <- 0 until recommendations_input) {
-      println(s"#${x+1} recommendation for user #${allUsers(id_input).userID} is: ${rankings.pop()}")
+    for (x <- 0 until recommendations_input.toInt) {
+      println(s"#${x+1} recommendation for user #${allUsers(userID).userID} is: ${rankings.pop()}")
     }
   }
 }
