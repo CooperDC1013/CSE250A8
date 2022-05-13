@@ -1,3 +1,7 @@
+/** Object NetflixMain by Cooper Cohen + Michael McDonald for CSE250, Spring 2022.
+ * Rather than outputting recommendations for all users, print recommendations based on client input.
+ * The client is asked to enter a userID and number of desired recommendations.
+ */
 object NetflixMain2 {
   def main(args: Array[String]): Unit = {
     print("Enter a user ID: ")

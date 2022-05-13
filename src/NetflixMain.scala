@@ -1,3 +1,8 @@
+/** Object NetflixMain by Cooper Cohen + Michael McDonald for CSE250, Spring 2022.
+ * Outputs MovieLens recommendations for every user to a text file. An optional command line argument can be used
+ * to specify how many recommendations should be outputted for each user, else a default of 10 is used
+ */
+
 import java.io.FileWriter
 
 object NetflixMain extends App {
@@ -28,6 +33,7 @@ object NetflixMain extends App {
       }
     }
   }
+  val u_gAverage: Array[Double] = (for (g <- movieAcc.indices) yield {movieAcc(g) / movieCount(g)}).toArray
 
   // The recommendations are written to an output file
   val writer = new FileWriter("output.txt", false)
@@ -55,10 +61,9 @@ object NetflixMain extends App {
 
     // Stores the u_g, u_gAverage, and p_ug of all 6 genres for the current user
     val u_g: Array[Double] = (for (g <- genreAcc.indices) yield {genreAcc(g).toDouble / genreCount(g)}).toArray
-    val u_gAverage: Array[Double] = (for (g <- movieAcc.indices) yield {movieAcc(g) / movieCount(g)}).toArray
     val p_ug: Array[Double] = (for (g <- u_g.indices) yield {u_g(g) / u_gAverage(g)}).toArray
 
-    // Loop over all movies and generate a recommendation score for the user for each movie
+    // Loop over all movies and generate a recommendation score for the user for each movie.
     // Then insert the recommendations in a maxHeap for sortedness
     for (movieID <- allMovies.indices if movieID != 0) {
       val genres: Array[Boolean] = moviebase.genre(movieID)
