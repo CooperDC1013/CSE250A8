@@ -11,7 +11,7 @@ final class MovieBaseCDC {
     val raw = io.Source.fromFile(inpFile)
     val lines = raw.getLines().map(line => line.split('|'))
     //mdb = new Array[Movie](lines.length+1) //create size of array same as number of movie entries. Movie index == mdb index.
-    for (line <- lines if line(1).compareTo("unknown") != 0 && line(1)(line(1).length - 2) != 'V') {
+    for (line <- lines if line.length != 1 && line(1).compareTo("unknown") != 0 && line(1)(line(1).length - 2) != 'V') {
       //println(line.mkString("Array(", ", ", ")"))
       //mdb(line(0).toInt) = new Movie(line(0).toInt, line(1), line(2).substring(line(2).length-5).toInt, getGenre(line))
       mdb(line(0).toInt) = new Movie(line(0).toInt, line(1), line(1).trim.drop(line(1).length-6).drop(1).dropRight(1).toInt, getGenre(line))
