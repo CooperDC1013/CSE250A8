@@ -64,25 +64,26 @@ B)  Runtime Analysis :
         Starting from the beginning of the Main Object :
 
             0. Initialization of the MovieBase and UserBase classes simply iterated over the lines in the data files,
-            This produced a value of O(M), Θ(M), O(U), Θ(U), linear runtimes for the iteration over the entire sets.
+            This produced a value of O(M), Θ(M), O(R+U), Θ(R+U), linear runtimes for the iteration over the entire sets.
 
             1. Assigning genres required iterating over the entire movie set, yielding O(M), Θ(M).
             There was nothing that could be done about this.
 
-            2.  The next largest block starts on line 41, starting a for loop iterating over users.
+            2.  The next largest block starts on line 25, starting a for loop iterating over users.
                 a) User iteration => Θ(U).
-                b) Line 45, get_all_ratings => Θ(R_u). This implies Θ(U) * Θ(R_u) = Θ(R).
-                c) Line 51, for loop iterates over R_u. Since this is added to b), no change in runtime of block.
-                d) Line 68 for loop => Θ(M) * O(logM) = O(MlogM) //comes from .enqueue calls to Max Heap
+                b) Line 30, get_all_ratings => Θ(R_u). This implies Θ(U) * Θ(R_u) = Θ(R).
+                c) Line 40, for loop iterates over R_u. Since this is added to b), no change in runtime of block.
+                d) Line 61 for loop => Θ(M) * O(logM) = O(MlogM) //comes from .enqueue calls to Max Heap
 
             From this analysis, we are left with the final calculation for the main object :
 
-            Θ(M + U) + Θ(M) + Θ(U) * Θ(R_u) * O(MlogM) =
-            Θ(M + U) + Θ(R) * O(MlogM) =
-            Θ(M + U) + O(RMlogM)
+            Θ(M + R + U) + Θ(M) + Θ(U) * Θ(R_u) * O(MlogM) =
+            Θ(M + R + U) + Θ(U) * Θ(R_u) * O(MlogM) =
+            Θ(M + R + U) + Θ(R) * O(MlogM) =
+            Θ(M + R + U) + O(RMlogM)
 
         A similar calculation can be made for the user-selected Main Object, except that the iteration over all users
         does not occur :
 
-            Θ(M + U) + Θ(M) + O(MlogM) =
-            Θ(M + U) + O(MlogM)
+            Θ(M + U + R) + Θ(M) + O(MlogM) =
+            Θ(M + U + R) + O(MlogM)
