@@ -58,9 +58,9 @@ object NetflixMain extends App {
         }
       }
     }
-
-    // Stores the u_g, u_gAverage, and p_ug of all 6 genres for the current user
     val u_g: Array[Double] = (for (g <- genreAcc.indices) yield {genreAcc(g).toDouble / genreCount(g)}).toArray
+
+    // Stores the p_ug of all 6 genres for the current user
     val p_ug: Array[Double] = (for (g <- u_g.indices) yield {u_g(g) / u_gAverage(g)}).toArray
 
     // Loop over all movies and generate a recommendation score for the user for each movie.
@@ -80,6 +80,7 @@ object NetflixMain extends App {
     for (x <- 0 until number_of_recommendations) {
       writer.write(s"#${x+1} recommendation for user #${allUsers(userID).userID} is: ${rankings.pop()}\n")
     }
+    writer.write("\n")
   }
   writer.close()
 }
