@@ -6,14 +6,29 @@
 import java.io.FileWriter
 
 object NetflixMain extends App {
-  // Allows an optional command line argument for the number of recommendations provided
-  private val number_of_recommendations: Int = if (args.length == 1) args(0).toInt else 5
-
   // Heap for storing each user's recommendations; a new heap is used for each user
+  // The cap is 1682 since that's the total number of movies
   private class Recommendations extends Heap[(String, Double)](1682, (x, y) => x._2.compareTo(y._2))
 
   private val moviebase = new MovieBaseCDC
   private val userbase = new Userbase_MM
+
+  // Allows an optional command line argument for the number of recommendations provided
+  private def number_of_recommendations(): Int = {
+    if (args.length == 1) {
+      if (!args(0).forall(_.isDigit) || !userbase.valid_movie_id(args(0).toInt)) {
+        return -1
+      }
+      else return args(0).toInt
+    }
+    10
+  }
+  var recommendations_count = number_of_recommendations()
+  if (recommendations_count == -1) {
+    println("Invalid input; please try again with a number between 1 and 1682.")
+    println("A default of 10 will be used instead.\n")
+    recommendations_count = 10
+  }
 
   private val allMovies = moviebase.getMovies
   private val allUsers = userbase.get_all_users()
@@ -71,7 +86,7 @@ object NetflixMain extends App {
     
     // Pop the top 10, 30, 50, etc. recommendations from the heap
     // Write the recommendations to an output file
-    for (x <- 0 until number_of_recommendations) {
+    for (x <- 0 until recommendations_count) {
       writer.write(s"#${x+1} recommendation for user #${allUsers(userID).userID} is: ${rankings.pop()}\n")
     }
     writer.write("\n")
