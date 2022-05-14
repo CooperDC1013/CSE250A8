@@ -69,11 +69,11 @@ B)  Runtime Analysis :
             1. Assigning genres required iterating over the entire movie set, yielding O(M), Θ(M).
             There was nothing that could be done about this.
 
-            2.  The next largest block starts on line 25, starting a for loop iterating over users.
+            2.  The next largest block starts on line 40, starting a for loop iterating over users.
                 a) User iteration => Θ(U).
-                b) Line 30, get_all_ratings => Θ(R_u). This implies Θ(U) * Θ(R_u) = Θ(R).
-                c) Line 40, for loop iterates over R_u. Since this is added to b), no change in runtime of block.
-                d) Line 61 for loop => Θ(M) * O(logM) = O(MlogM) //comes from .enqueue calls to Max Heap
+                b) Line 45, get_all_ratings => Θ(R_u). This implies Θ(U) * Θ(R_u) = Θ(R).
+                c) Line 55, for loop iterates over R_u. Since this is added to b), no change in runtime of block.
+                d) Line 76 for loop => Θ(M) * O(logM) = O(MlogM) //comes from .enqueue calls to Max Heap
 
             From this analysis, we are left with the final calculation for the main object :
 
